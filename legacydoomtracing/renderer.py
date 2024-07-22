@@ -2,38 +2,37 @@ from map import LineSeg
 from player import *
 import math
 
-#30 units = 1 meter
-#450 pixels = 2 meters about
-
 class Engine:
-    def render(self, map: list[LineSeg], player: Player):
+    def render(self, map: list[LineSeg], player: Player, resolution: tuple[int], rayCount: int):
 
         pixelCols = []
-        for deltaX in range(100):
+        for deltaX in range(rayCount):
 
-            xCoord = 50 - deltaX
-            angleRadians = self.__findProjAngle(xCoord, 50)
+            xCoord = (rayCount / 2) - deltaX
+            angleRadians = self.findProjAngle(xCoord, rayCount / 2)
 
             ray = self.rotateVector(angleRadians, player.facing)
-            colDist = self.__castRay(player.pos, ray, map)
+            colDist = self.castRay(player.pos, ray, map)
             if colDist == 0:
-                colDist = 810000
-            colHeight = (450 * 30) / (colDist * math.cos(angleRadians))
-            colHeight = int(colHeight)
+                colHeight = 0
+            else:
+                colHeight = (resolution[0] * 15) / (colDist * math.cos(angleRadians))
 
+            colHeight = int(colHeight)
             pixelCols.append(colHeight)
 
+        print(pixelCols)
         return pixelCols
 
-    def __castRay(self, rayOrigin: np.array, rayVector: np.array, map: list[LineSeg]) -> float:
-        closestIntersection = 810000
+    def castRay(self, rayOrigin: np.array, rayVector: np.array, map: list[LineSeg]) -> float:
+        closestIntersection = 1000000
 
         for line in map:
-            intersection = self.__findIntersection(rayOrigin, rayVector, line.vert1, line.vert2)
+            intersection = self.findIntersection(rayOrigin, rayVector, line.vert1, line.vert2)
             if intersection is None:
                 continue
 
-            intersectDist = self.__distBetweenPoints(rayOrigin, intersection)
+            intersectDist = self.distBetweenPoints(rayOrigin, intersection)
 
             if intersectDist < closestIntersection or closestIntersection is None:
                 closestIntersection = intersectDist
@@ -48,7 +47,7 @@ class Engine:
         return vector
 
     #ChatGPT wrote this I was too lazy
-    def __findIntersection(self, rayOrigin: np.array, rayVector: np.array, segVert1: np.array, segVert2: np.array):
+    def findIntersection(self, rayOrigin: np.array, rayVector: np.array, segVert1: np.array, segVert2: np.array):
         p = rayOrigin
         r = rayVector
         q = segVert1
@@ -74,11 +73,11 @@ class Engine:
             # Ray does not intersect the segment within the bounds
             return None
         
-    def __distBetweenPoints(self, point1: np.array, point2: np.array) -> float:
+    def distBetweenPoints(self, point1: np.array, point2: np.array) -> float:
         vector = np.array(point2 - point1)
         distance = np.sqrt(np.sum(vector ** 2))
 
         return distance
 
-    def __findProjAngle(self, xCoord: float, distanceFromPlane: float):
+    def findProjAngle(self, xCoord: float, distanceFromPlane: float) -> float:
         return math.atan(xCoord / distanceFromPlane)

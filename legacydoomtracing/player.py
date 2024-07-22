@@ -1,7 +1,7 @@
 import numpy as np
 import math
 
-class Player:
+class Player: 
 
     FORWARD = 2
     BACKWARD = -2
@@ -15,6 +15,7 @@ class Player:
 
     def move(self, direction: int):
         self.pos = self.pos + self.facing * direction
+        print(self.pos)
     
     def turn(self, direction: int):
         self.facing = self.__rotateVector(direction, self.facing)
@@ -26,3 +27,4 @@ class Player:
         vector = np.array([newX, newY])
 
         return vector
+

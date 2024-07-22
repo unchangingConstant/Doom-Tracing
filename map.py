@@ -1,12 +1,5 @@
-import numpy as np
+from geometry import *
 
-class LineSeg:
-    def __init__(self, vertice1: np.array, vertice2: np.array):
-        self.vert1 = vertice1
-        self.vert2 = vertice2
+line_1 = LineSeg((0, 100), (1, 0), 100)
 
-line1 = LineSeg(np.array([0, 100]), np.array([100, 100]))
-line2 = LineSeg(np.array([100, 100]), np.array([100, 0]))
-
-map = [line1, line2]
-
+map_1 = [line_1]

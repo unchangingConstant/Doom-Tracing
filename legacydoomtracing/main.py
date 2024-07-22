@@ -1,7 +1,8 @@
 import pygame
-from actors import *
-from engine import Engine
-import map
+import numpy as np
+from player import *
+from renderer import Engine
+from map import map
 
 pygame.init()
 
@@ -16,14 +17,14 @@ win = pygame.display.set_mode(windowDim)
 
 if __name__ == "__main__":
     run = True
-    david = Camera()
+    david = Player(np.array([0, 0]))
+    engine = Engine()
 
     while run:
-    
-        win.fill((0, 0, 0))
-        print(david.get_position())
 
-        pixelColumns = Engine().render(map.map_1, david, (width, height), rays)
+        win.fill((0, 0, 0))
+
+        pixelColumns = engine.render(map, david, (width, height), rays)
 
         currentCol = 0
         for col in pixelColumns:
@@ -39,13 +40,13 @@ if __name__ == "__main__":
         userInput = pygame.key.get_pressed()
 
         if userInput[pygame.K_a]:
-            david.turn(Camera.LEFT)
+            david.turn(Player.LEFT)
         if userInput[pygame.K_d]:
-            david.turn(Camera.RIGHT)
+            david.turn(Player.RIGHT)
         if userInput[pygame.K_w]:
-            david.move(Camera.FORWARD)
+            david.move(Player.FORWARD)
         if userInput[pygame.K_s]:
-            david.move(Camera.BACKWARD)
+            david.move(Player.BACKWARD)
 
         pygame.time.delay(32)
 
