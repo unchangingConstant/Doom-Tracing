@@ -2,12 +2,18 @@ import pygame
 from actors import *
 from engine import Engine
 import map
+import time
+import os
+import sys
 
 pygame.init()
+pygame.font.init()
+
+font = pygame.font.SysFont('Comic Sans MS', 30)
 
 height = 900
 width = 1600
-rays = 100
+rays = 1600
 
 columnWidth = width / rays
 
@@ -19,9 +25,11 @@ if __name__ == "__main__":
     david = Camera()
 
     while run:
+
+        fps_start = time.time()
+        start = time.time()
     
         win.fill((0, 0, 0))
-        print(david.get_position())
 
         pixelColumns = Engine().render(map.map_1, david, (width, height), rays)
 
@@ -47,6 +55,9 @@ if __name__ == "__main__":
         if userInput[pygame.K_s]:
             david.move(Camera.BACKWARD)
 
-        pygame.time.delay(32)
+        stop = time.time()
+        pygame.time.delay(25 - (int(1000 * (stop - start))))
+        fps_stop = time.time()
 
+        win.blit(font.render(f"{int(1 / (fps_stop-fps_start))} VIEW FPS - {int(1 / (stop-start))} REAL FPS", False, (0, 255, 0)), (0, 0))
         pygame.display.update()

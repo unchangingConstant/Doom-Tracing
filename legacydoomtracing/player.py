@@ -3,8 +3,8 @@ import math
 
 class Player: 
 
-    FORWARD = 2
-    BACKWARD = -2
+    FORWARD = 3
+    BACKWARD = -3
 
     RIGHT = -10 * (math.pi / 180)
     LEFT = 10 * (math.pi / 180)
@@ -15,7 +15,6 @@ class Player:
 
     def move(self, direction: int):
         self.pos = self.pos + self.facing * direction
-        print(self.pos)
     
     def turn(self, direction: int):
         self.facing = self.__rotateVector(direction, self.facing)

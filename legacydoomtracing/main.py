@@ -3,12 +3,16 @@ import numpy as np
 from player import *
 from renderer import Engine
 from map import map
+import time
 
 pygame.init()
+pygame.font.init()
+
+font = pygame.font.SysFont('Comic Sans MS', 30)
 
 height = 900
 width = 1600
-rays = 100
+rays = 1600
 
 columnWidth = width / rays
 
@@ -21,6 +25,9 @@ if __name__ == "__main__":
     engine = Engine()
 
     while run:
+
+        fps_start = time.time()
+        start = time.time()
 
         win.fill((0, 0, 0))
 
@@ -48,6 +55,9 @@ if __name__ == "__main__":
         if userInput[pygame.K_s]:
             david.move(Player.BACKWARD)
 
-        pygame.time.delay(32)
+        stop = time.time()
+        pygame.time.delay(25 - (int(1000 * (stop - start))))
+        fps_stop = time.time()
 
+        win.blit(font.render(f"{int(1 / (fps_stop-fps_start))} VIEW FPS - {int(1 / (stop-start))} REAL FPS", False, (0, 255, 0)), (0, 0))
         pygame.display.update()

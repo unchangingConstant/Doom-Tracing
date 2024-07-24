@@ -11,14 +11,13 @@ class Engine:
         ray_columns = []
         for curr_ray_column in range(ray_count):
 
-            ray_x_position = (ray_count - (2 * curr_ray_column)) / camera.get_dist_from_view_plane()
+            ray_x_position = camera.get_dist_from_view_plane() - ((curr_ray_column / ray_count) * 2 * camera.get_dist_from_view_plane())
             #   Optimize below code? Normalization doesn't have to be a seperate step...
             ray_vector = cls.__find_hypotenuse_vector(camera.get_orientation(), camera.get_dist_from_view_plane(), ray_x_position)
             ray_vector = normalize_vector(ray_vector)
-            print(ray_vector)
 
             column_height = cls.__cast_ray(map, camera.get_position(), ray_vector)
-            column_height = int((column_height * resolution[0] * 15) / find_proj_of_vector(camera.get_orientation(), ray_vector))
+            column_height = int((column_height * resolution[0] * 50) / find_proj_of_vector(camera.get_orientation(), ray_vector))
             ray_columns.append(column_height)
 
         return ray_columns
@@ -43,6 +42,7 @@ class Engine:
         return hypotenuse_vector
     
     def __ray_segment_intersect_distance(cls, ray_origin: list[float], ray_vector: list[float], segment: LineSeg) -> float:
+
         delta_y = ray_origin[1] - segment.get_y_pos()
         delta_x = ray_origin[0] - segment.get_x_pos()
 
@@ -52,10 +52,13 @@ class Engine:
         ray_y_component = ray_vector[1]
         seg_y_component = segment.get_orientation()[1]
 
+        if ((seg_y_component * ray_x_component) - (seg_x_component * ray_y_component)) == 0:
+            return 0
+        if ((seg_x_component * ray_y_component) - (seg_y_component * ray_x_component)) == 0:
+            return 0
+
         distance_to_intersect_along_ray = ((seg_x_component * delta_y) - (seg_y_component * delta_x)) / ((seg_y_component * ray_x_component) - (seg_x_component * ray_y_component))
         distance_to_intersect_along_seg = ((ray_x_component * -delta_y) - (ray_y_component * -delta_x)) / ((seg_x_component * ray_y_component) - (seg_y_component * ray_x_component))
-
-        print(f"{distance_to_intersect_along_ray}, {distance_to_intersect_along_seg}")
 
         ray_intersect_valid = distance_to_intersect_along_ray > 0
         seg_intersect_valid = distance_to_intersect_along_seg > 0 and distance_to_intersect_along_seg < segment.get_length()

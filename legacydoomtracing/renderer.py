@@ -21,7 +21,6 @@ class Engine:
             colHeight = int(colHeight)
             pixelCols.append(colHeight)
 
-        print(pixelCols)
         return pixelCols
 
     def castRay(self, rayOrigin: np.array, rayVector: np.array, map: list[LineSeg]) -> float:

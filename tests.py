@@ -18,8 +18,6 @@ def ray_segment_intersect_distance(ray_origin: list[float], ray_vector: list[flo
         distance_to_intersect_along_ray = ((seg_x_component * delta_y) - (seg_y_component * delta_x)) / ((seg_y_component * ray_x_component) - (seg_x_component * ray_y_component))
         distance_to_intersect_along_seg = ((ray_x_component * -delta_y) - (ray_y_component * -delta_x)) / ((seg_y_component * ray_x_component) - (seg_x_component * ray_y_component))
 
-        print(f"{distance_to_intersect_along_ray}, {distance_to_intersect_along_seg}")
-
         ray_intersect_valid = distance_to_intersect_along_ray > 0
         seg_intersect_valid = distance_to_intersect_along_seg > 0 and distance_to_intersect_along_seg < segment.get_length()
 
